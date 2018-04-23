@@ -135,7 +135,7 @@ fn trace(ray_origin: Vec, ray_direction: Vec, objects: &[Box<VisualObject>], dep
     // if there's no intersection return black or background color
     if let Some(obj) = object {
         let mut surface_color = Vec::zero(); // color of the ray/surfaceof the object intersected by the ray
-        let p_hit = ray_direction.mul_add(Vec::broadcast(tnear), ray_origin); // point of intersection
+        let p_hit = ray_origin + ray_direction * tnear; // point of intersection
         let mut n_hit = obj.calculate_normal(p_hit);
 
         // If the normal and the view direction are not opposite to each other
@@ -161,7 +161,7 @@ fn trace(ray_origin: Vec, ray_direction: Vec, objects: &[Box<VisualObject>], dep
             let mut reflection_dir = ray_direction - n_hit * 2.0f32 * ray_direction.dot(n_hit);
             Vec::normalize(&mut reflection_dir);
 
-            let reflection = trace(p_hit + n_hit * bias, reflection_dir, objects, depth + 1); // TODO: MUL_ADD
+            let reflection = trace(p_hit + n_hit * bias, reflection_dir, objects, depth + 1);
             let mut refraction = Vec::zero();
 
             // if the sphere is also transparent compute refraction ray (transmission)
@@ -194,7 +194,6 @@ fn trace(ray_origin: Vec, ray_direction: Vec, objects: &[Box<VisualObject>], dep
                             if let Some((_t0, _t1)) =
                                 o2.intersect(p_hit + n_hit * bias, light_direction)
                             {
-                                // TODO: MUL_ADD
                                 transmission = Vec::zero();
                                 break;
                             }
