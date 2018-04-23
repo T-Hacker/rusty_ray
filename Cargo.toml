@@ -1,0 +1,7 @@
+[package]
+name = "rusty_ray"
+version = "0.1.0"
+authors = ["Pedro Gomes <p.f.q.gomes@gmail.com>"]
+
+[dependencies]
+vek = {version = "~0.9.3", default-features = false, features = ["repr_simd"]}
